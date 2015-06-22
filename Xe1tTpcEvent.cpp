@@ -10,7 +10,7 @@
 #include "Xe1tTpcEvent.hpp"
 #include "Xe1tTpcPeak.hpp"
 
-
+extern TRandom* gRandom;
 
 Xe1tTpcEvent::Xe1tTpcEvent() //A standard constructor is required for ROOT I/O
 {    
@@ -49,7 +49,7 @@ void Xe1tTpcEvent::BuildExampleEvent(Double_t bias) {
   
   ClearEvent();
 
-  mEvtNumber = static_cast<Long64_t> bias ; //Just to fill with some value
+  mEvtNumber = static_cast<Long64_t>( bias ) ; //Just to fill with some value
   mTimeStamp = bias*10. + gRandom->Uniform(0.,8.); //Just to fill with some value
 
   // Yes you are right, this piece should be embedded in a proper "AddPeak()"/"AddS1()"/"AddS2()" methods, but for

@@ -4,13 +4,11 @@
 #error Please compile/run this macro with a ROOT version compiled with C++11 features enable (e.g. ROOT6 is compulsory compiled with C++11 standard)
 #endif
 
-
-
-#include "TPCevent.hpp"
-
 #include "TFile.h"
 #include "TTree.h"
 #include "TBranch.h"
+
+#include "Xe1tTpcEvent.hpp"
 
 
 void testpreparation()
@@ -27,10 +25,10 @@ void testpreparation()
 
   ptree->BranchRef(); //Needed to autoload referenced objects
 
-  const Long64_t totevents = 10;
+  const Long64_t totevents = 100;
 
   for (int ievt = 0; ievt < totevents; ++ievt) {
-    pevent->BuildExampleEvent(ievt * 1000.0);
+    pevent->BuildExampleEvent(ievt);
     ptree->Fill();
   }
   
