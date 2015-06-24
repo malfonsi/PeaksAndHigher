@@ -25,7 +25,7 @@ void testpreparation()
 
   ptree->BranchRef(); //Needed to autoload referenced objects
 
-  const Long64_t totevents = 100;
+  const Long64_t totevents = 20;
 
   for (int ievt = 0; ievt < totevents; ++ievt) {
     pevent->BuildExampleEvent(ievt);
@@ -40,7 +40,7 @@ void testpreparation()
 /*
 IMPORTANT OUTCOME OF THIS TEST:
 
-1) Due to TClonesArray and TObject allocators, the Xe1tTpcXXX objects are
+1) Due to TClonesArray approach and TObject allocators, the Xe1tTpcXXX objects are
 allocated only the minimal necessary times and the location reused many times
 (as testified by the debugging messages in the constructors)
 

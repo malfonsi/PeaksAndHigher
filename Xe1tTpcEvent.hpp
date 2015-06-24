@@ -14,12 +14,10 @@
 //#include "TObject.h" //only if we derive from TObject
 #include "TClonesArray.h"
 #include "TRefArray.h"
-#include "TRandom.h"
+
 
 #include "Xe1tTpcPeak.hpp"
 
-//remove when debugging is done
-#include <iostream>
 
 
 class Xe1tTpcEvent 
@@ -49,6 +47,7 @@ public:
 
   const TRefArray* GetS1List() const { return pRefS1Peaks; } //is const suitable?
   const TRefArray* GetS2List() const { return pRefS2Peaks; } //is const suitable?
+  const Long64_t& EvtNb() const { return mEvtNumber; } 
 
   void ClearEvent() ;
 

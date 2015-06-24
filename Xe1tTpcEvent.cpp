@@ -5,10 +5,18 @@
 #error Please compile this code with a C++11 std enabled compiler or use it with a ROOT version compiled with C++11 features enable (e.g. ROOT6 is compulsory compiled with C++11 standard)
 #endif
 
+#include "TClonesArray.h"
+#include "TRefArray.h"
+#include "TRandom.h"
 
 
 #include "Xe1tTpcEvent.hpp"
 #include "Xe1tTpcPeak.hpp"
+
+
+//remove when debugging is done (used to quickly debug constructor calls)
+#include <iostream>
+
 
 extern TRandom* gRandom;
 

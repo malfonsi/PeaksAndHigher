@@ -7,10 +7,8 @@
 #endif
 
 
-#ifndef XENON1T_TESTDATALAYOUT_TPCEVENT
-#define XENON1T_TESTDATALAYOUT_TPCEVENT
-
-
+#ifndef UNIMAINZ_TESTCLASSESINTREE_XE1TTPCPEAK
+#define UNIMAINZ_TESTCLASSESINTREE_XE1TTPCPEAK
 
 
 
@@ -20,7 +18,7 @@
 #include "TRefArray.h"
 #include "TRandom.h"
 
-//remove when debugging is done
+//remove when debugging is done (used to quickly debug constructor calls)
 #include <iostream>
 
 class Xe1tTpcPeak : public TObject //TObject-derivation required to be in a TCloneArray 
@@ -50,7 +48,7 @@ public:
 };
 
 
-#endif // #ifndef XENON1T_TESTDATALAYOUT_TPCEVENT
+#endif // #ifndef UNIMAINZ_TESTCLASSESINTREE_XE1TTPCPEAK
 
 
 

@@ -1,7 +1,7 @@
 
 // PLEASE COMPILE ROOT WITH C++11 STD OR USE ROOT6 (WHICH IS COMPULSORY COMPILED WITH C++11 STD)
 #if __cplusplus < 201103L
-#error Please compile this code with a C++11 std enabled compiler or use it with a ROOT version compiled with C++11 features enable (e.g. ROOT6 is compulsory compiled with C++11 standard)
+#error Please compile this code with a C++11 std enabled or use it with a ROOT version compiled with C++11 features enable (e.g. ROOT6 is compulsory compiled with C++11 standard)
 #endif
 
 
@@ -14,10 +14,10 @@
 #include <iostream>
 
 
-TCanvas testgroup1test1canvas1 ;
+TCanvas testgroup1test2canvas1 ;
 
 
-void testgroup1test1()
+void testgroup1test2()
 {
   using std::cout;
   using std::endl;
@@ -25,8 +25,6 @@ void testgroup1test1()
   auto prootfile = TFile::Open("testTPCevent.root");
   auto ptree = static_cast<TTree*>( prootfile->Get("treeTPC") );
   ptree->Print();
-
-  // 1)
 
   cout << "\n 1) Next test is: ptree->Scan(\"mEvtNumber\"); //i.e. a request not accessing the Peaks' TCloneArray\n";
 
@@ -43,9 +41,6 @@ void testgroup1test1()
   cout << "Double-click the canvas to continue" << endl;
   testgroup1test1canvas1.Modified() ; testgroup1test1canvas1.Update() ; testgroup1test1canvas1.WaitPrimitive() ;
 
-  // 2)
-
-  cout << "\n *****************************************************************************";
   cout << "\n 2) Next test is: ptree->Scan(\"mEvtNumber:pTpcPeaks@->GetEntries():mTotArea\"); //i.e. now a variable within the Peaks' TClonesArray is requested.\n";
 
   cout << "Double-click the canvas to continue" << endl;
@@ -55,18 +50,6 @@ void testgroup1test1()
 
   cout << "Please scroll up and check how Xe1tTpcPeak are constructed: only when required and only the first time!"
     " \n (compare with the number of elements in the TClonesArray per event). Any already constructed element is just re-used." << endl;
-
-  cout << "Double-click the canvas to continue" << endl;
-  testgroup1test1canvas1.Modified() ; testgroup1test1canvas1.Update() ; testgroup1test1canvas1.WaitPrimitive() ;
-
-  // 3)
-
-  cout << "\n *****************************************************************************";
-  cout << "\n 3) Next test is: ptree->Scan(\"mEvtNumber:pTpcPeaks@->GetEntries():pTpcPeaks.Tot():\"); //i.e. now a variable within the Peaks' TClonesArray is requested.\n";
-
-  cout << "Double-click the canvas to continue" << endl;
-  testgroup1test1canvas1.Modified() ; testgroup1test1canvas1.Update() ; testgroup1test1canvas1.WaitPrimitive() ;
-
 
 
   /*
