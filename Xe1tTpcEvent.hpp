@@ -45,9 +45,15 @@ public:
 
   ~Xe1tTpcEvent() ;
 
-  const TRefArray* GetS1List() const { return pRefS1Peaks; } //is const suitable?
-  const TRefArray* GetS2List() const { return pRefS2Peaks; } //is const suitable?
+  const TRefArray* S1List() const { return pRefS1Peaks; } //is const suitable?
+  const TRefArray* S2List() const { return pRefS2Peaks; } //is const suitable?
   const Long64_t& EvtNb() const { return mEvtNumber; } 
+
+  const Xe1tTpcPeak* S1(UInt_t index) const 
+  { return static_cast<Xe1tTpcPeak*>( pRefS1Peaks->At(index) ); }
+
+  const Xe1tTpcPeak& S2(UInt_t index) const 
+  { return *( static_cast<Xe1tTpcPeak*>( pRefS2Peaks->At(index) ) ); }
 
   void ClearEvent() ;
 

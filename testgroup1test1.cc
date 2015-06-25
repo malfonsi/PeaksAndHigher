@@ -16,11 +16,19 @@
 
 TCanvas testgroup1test1canvas1 ;
 
+void WaitForDClick()
+{
+  cout << "\nDouble-click the canvas to continue\r" << flush;
+  testgroup1test1canvas1.Modified() ; testgroup1test1canvas1.Update() ; testgroup1test1canvas1.WaitPrimitive() ;
+  cout << "                                                            \n";
+}
+
 
 void testgroup1test1()
 {
   using std::cout;
   using std::endl;
+  using std::flush;
 
   auto prootfile = TFile::Open("testTPCevent.root");
   auto ptree = static_cast<TTree*>( prootfile->Get("treeTPC") );
@@ -28,44 +36,60 @@ void testgroup1test1()
 
   // 1)
 
-  cout << "\n 1) Next test is: ptree->Scan(\"mEvtNumber\"); //i.e. a request not accessing the Peaks' TCloneArray\n";
+  cout << "\n *****************************************************************************";
+  cout << "\n 1) NEXT TEST IS: ptree->Scan(\"mEvtNumber\"); //i.e. a request not accessing the Peaks' TCloneArray\n";
 
-  cout << "Double-click the canvas to continue" << endl;
-  testgroup1test1canvas1.Modified() ; testgroup1test1canvas1.Update() ; testgroup1test1canvas1.WaitPrimitive() ;
-
+  WaitForDClick();
+  
+  cout << "________________________________________________________\n";
   ptree->Scan("mEvtNumber");
+  cout << "________________________________________________________\n\n";
 
-  cout << "Please scroll up and note the debug message on the Xe1tTpcEvent construction called at the very beginning."
-    "\n This is called also once (i.e. the object is reused). MOREOVER NO Xe1tTpcPeak OBJECT IS CONSTRUCTED"
+  cout << " Please scroll up and note the debug message on the Xe1tTpcEvent construction called at the very beginning."
+    "\n This is called only once (i.e. the object is reused). MOREOVER NO Xe1tTpcPeak OBJECT IS CONSTRUCTED"
     " (no debug message from constructors) BECAUSE THEY ARE NOT REQUIRED."
     " \n Therefore a TClonesArray can efficently manage object in a TTree, avoiding to read from disk unnecessary objects\n";
 
-  cout << "Double-click the canvas to continue" << endl;
-  testgroup1test1canvas1.Modified() ; testgroup1test1canvas1.Update() ; testgroup1test1canvas1.WaitPrimitive() ;
+  WaitForDClick();
+
 
   // 2)
 
   cout << "\n *****************************************************************************";
-  cout << "\n 2) Next test is: ptree->Scan(\"mEvtNumber:pTpcPeaks@->GetEntries():mTotArea\"); //i.e. now a variable within the Peaks' TClonesArray is requested.\n";
+  cout << "\n 2) NEXT TEST IS: ptree->Scan(\"mEvtNumber:pTpcPeaks@->GetEntries():mTotArea\",\"\",\"colsize=20\"); //i.e. now a variable within the Peaks' TClonesArray is requested.\n";
 
-  cout << "Double-click the canvas to continue" << endl;
-  testgroup1test1canvas1.Modified() ; testgroup1test1canvas1.Update() ; testgroup1test1canvas1.WaitPrimitive() ;
+  WaitForDClick();
 
-  ptree->Scan("mEvtNumber:pTpcPeaks@->GetEntries():mTotArea");
+  cout << "____________________________________________________________________________\n";
+  ptree->Scan("mEvtNumber:pTpcPeaks@->GetEntries():mTotArea","","colsize=20");
+  cout << "____________________________________________________________________________\n\n";
 
-  cout << "Please scroll up and check how Xe1tTpcPeak are constructed: only when required and only the first time!"
-    " \n (compare with the number of elements in the TClonesArray per event). Any already constructed element is just re-used." << endl;
+  cout << " Please scroll up and check how Xe1tTpcPeak are constructed: only when required and only the first time!"
+    " \n (compare with the number of elements in the TClonesArray per event). Any already constructed element is just re-used.\n\n";
 
-  cout << "Double-click the canvas to continue" << endl;
-  testgroup1test1canvas1.Modified() ; testgroup1test1canvas1.Update() ; testgroup1test1canvas1.WaitPrimitive() ;
+  WaitForDClick();
+
 
   // 3)
 
   cout << "\n *****************************************************************************";
-  cout << "\n 3) Next test is: ptree->Scan(\"mEvtNumber:pTpcPeaks@->GetEntries():pTpcPeaks.Tot():\"); //i.e. now a variable within the Peaks' TClonesArray is requested.\n";
+  cout << "\n 3) NEXT TEST IS: ptree->Scan(\"mEvtNumber:pTpcPeaks@->GetEntries():pTpcPeaks.mTotArea:pRefS1Peaks@->GetLast()+1:pRefS1Peaks.mTotArea:pRefS2Peaks@->GetLast()+1:pRefS2Peaks.mTotArea\");\n"
+    " //This shows how a TClonesArray and TRefArray contained objects can be accessed\n"
+    " //Note the use of @ to access methods of container rather than the \"contained\", I wonder how this will change with the new TTreeFormula of the upcoming ROOT 6.06\n"
+    " //Note also the use of GetLast()+1 to know the total entries of a TRefArray as the last index + 1 (GetEntries() exists but they claim that it is inefficient in this case)\n" ;
 
-  cout << "Double-click the canvas to continue" << endl;
-  testgroup1test1canvas1.Modified() ; testgroup1test1canvas1.Update() ; testgroup1test1canvas1.WaitPrimitive() ;
+  WaitForDClick();
+
+  cout << "______________________________________________________________________________________________________________________________\n";
+  ptree->Scan("mEvtNumber:pTpcPeaks@->GetEntries():pTpcPeaks.mTotArea:pRefS1Peaks@->GetLast()+1:pRefS1Peaks.mTotArea:pRefS2Peaks@->GetLast()+1:pRefS2Peaks.mTotArea","","colsize=20");
+  cout << "______________________________________________________________________________________________________________________________\n\n";
+
+  cout << " You can verify the use of TRefArray: it addresses the right element within TClonesArray without making unnecessary duplicates ";
+
+  WaitForDClick();
+
+
+
 
 
 
