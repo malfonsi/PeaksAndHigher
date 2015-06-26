@@ -12,7 +12,7 @@
 
 #include "Rtypes.h"
 //#include "TObject.h" //only if we derive from TObject
-#include "TClonesArray.h"
+//#include "TClonesArray.h" //in this git branch I try alternatives to TClonesArray
 #include "TRefArray.h"
 
 
@@ -29,11 +29,18 @@ private:
   Long64_t mEvtNumber = -1LL ;      //C++11 in-class initialisation extension
   Double_t mTimeStamp = -1.0 ;      //C++11 in-class initialisation extension
 
-  // The pointer to the peaks
-  TClonesArray   *pTpcPeaks;      //-> This arrow instructs the ROOT automatic Streamer to assume
+  // The pointer to the peaks as TClonesArray ...
+  //  TClonesArray   *pTpcPeaks;      //-> This arrow instructs the ROOT automatic Streamer to assume
 				  // that the pointer is always valid (and one has to keep this
 				  // promise! compare with the constructor!).     
-  
+  // ... is substituted with a "raw" array   
+  Int_t mNbPeaks;
+  Xe1tTpcPeak* pTpcPeaks ; //[mNbPeaks] This instruct the ROOT automatic
+			   //Streamer to assume that the pointer addresses an
+			   //array with mNbPeaks elements
+
+
+
   // Let's test the TRefArray features
   TRefArray     *pRefS1Peaks;
   TRefArray     *pRefS2Peaks;

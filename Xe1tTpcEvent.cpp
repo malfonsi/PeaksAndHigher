@@ -5,7 +5,7 @@
 #error Please compile this code with a C++11 std enabled compiler or use it with a ROOT version compiled with C++11 features enable (e.g. ROOT6 is compulsory compiled with C++11 standard)
 #endif
 
-#include "TClonesArray.h"
+//#include "TClonesArray.h" //in this git branch I try alternatives to TClonesArray
 #include "TRefArray.h"
 #include "TRandom.h"
 
@@ -21,8 +21,10 @@
 extern TRandom* gRandom;
 
 Xe1tTpcEvent::Xe1tTpcEvent() //A standard constructor is required for ROOT I/O
-{    
-  pTpcPeaks = new TClonesArray("Xe1tTpcPeak", kMaxTpcPeaksPerEvent);
+  : mNbPeaks(0) , pTpcPeaks(nullptr)
+{
+  //in this git branch I try alternatives to TClonesArray    
+  //  pTpcPeaks = new TClonesArray("Xe1tTpcPeak", kMaxTpcPeaksPerEvent);
   pRefS1Peaks = new TRefArray;
   pRefS2Peaks = new TRefArray;
   
@@ -31,21 +33,23 @@ Xe1tTpcEvent::Xe1tTpcEvent() //A standard constructor is required for ROOT I/O
 }
 
 Xe1tTpcEvent::~Xe1tTpcEvent() {
-  ClearEvent(); //takes care of the TCloneArray, as in the ROOT Event class
-  delete pRefS1Peaks; pRefS1Peaks = 0; //Is this reset to 0 strictly needed by ROOT, e.g. by
-  delete pRefS2Peaks; pRefS2Peaks = 0; //Streamers?!?! TO BE CHECKED
+  ClearEvent(); //a method for clean-up, as in the ROOT Event class example
+  delete pRefS1Peaks; pRefS1Peaks = nullptr; //Is this reset to 0 strictly needed by ROOT, e.g. by
+  delete pRefS2Peaks; pRefS2Peaks = nullptr; //Streamers?!?! TO BE CHECKED
+  delete [] pTpcPeaks; pTpcPeaks = nullptr;
 }
 
 void Xe1tTpcEvent::ClearEvent() {
-  pTpcPeaks->Clear("C"); //With the "C" option, the TClonesArray will call the method "Clear" of
-			 //each Xe1tTpcPeak. Well, at the moment this class is trivial, but the
-			 //principle is that Clear() should take care of the deallocation (or even
-			 //better the re-use, that is the final goal) of the dynamically allocated
-			 //memory. TClonesArray has also a Delete() method, but this will call the
-			 //destructors so any specific memory re-use that the embedded class could
-			 //have implemented is not exploited
+  //      pTpcPeaks->Clear("C"); //With the "C" option, the TClonesArray will call the method "Clear" of
+  //    			 //each Xe1tTpcPeak. Well, at the moment this class is trivial, but the
+  //    			 //principle is that Clear() should take care of the deallocation (or even
+  //    			 //better the re-use, that is the final goal) of the dynamically allocated
+  //    			 //memory. TClonesArray has also a Delete() method, but this will call the
+  //    			 //destructors so any specific memory re-use that the embedded class could
+  //    			 //have implemented is not exploited
   pRefS1Peaks->Delete(); //TRefArray is not the owner of the referenced objects, so Delete()
   pRefS2Peaks->Delete(); //clears the list but does not destroy the referenced objects
+  mNbPeaks = 0;
 }
 
 
@@ -54,8 +58,9 @@ void Xe1tTpcEvent::BuildExampleEvent(Double_t bias) {
   //The ROOT event class here save current object count, and set it back to this at the end of the
   //function... 
   Int_t objectnumber = TProcessID::GetObjectCount();
-  
-  ClearEvent();
+
+  if (pTpcPeaks == nullptr) pTpcPeaks = new Xe1tTpcPeak[kMaxTpcPeaksPerEvent];
+  ClearEvent(); //reset also mNbPeaks
 
   mEvtNumber = static_cast<Long64_t>( bias ) ; //Just to fill with some value
   mTimeStamp = bias*10. + gRandom->Uniform(0.,8.); //Just to fill with some value
@@ -66,7 +71,13 @@ void Xe1tTpcEvent::BuildExampleEvent(Double_t bias) {
   auto npeaks = static_cast<Int_t>( gRandom->Uniform(2 , kMaxTpcPeaksPerEvent) ); //C++11 new type-deducing feature with "auto"
 
   for (Int_t ipeak = 0; ipeak < npeaks ; ++ipeak) {
-    auto ppeak = static_cast<Xe1tTpcPeak*>( pTpcPeaks->ConstructedAt(ipeak) );
+    //    auto ppeak = static_cast<Xe1tTpcPeak*>( pTpcPeaks->ConstructedAt(ipeak) );
+    // when you replace the TClonesArray with raw arrays you end up
+    // with modifying the elements (that were already allocated) up to
+    // the npeak-th element, updating mNbPeaks accordingly. The ROOT
+    // I/O will fill the tree only up to the mNbPeak-th element
+
+    Xe1tTpcPeak* ppeak = &( pTpcPeaks[ mNbPeaks++ ] );
 
     ppeak->SetVars(bias+ipeak*10.0, bias+ipeak*7.0); //again just some values
 
