@@ -8,6 +8,9 @@
 
 #include "Xe1tTpcPeak.hpp"
 
+ClassImp(Xe1tTpcPeak);
 
 
-
+// #if defined(__ROOTCLING__)
+// #pragma link C++ class Xe1tTpcPeak+;
+// #endif

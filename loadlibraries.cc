@@ -15,6 +15,13 @@
   // at the end of main script. A workaround (not tried so far) has been 
   // introduced in ROOT6 v6.04 (see release note)
 
-  gSystem->CompileMacro("Xe1tTpcPeak.cpp","kgf","Xe1tTpcPeak");
-  gSystem->CompileMacro("Xe1tTpcEvent.cpp","kgf","Xe1tTpcEvent");
+  //  gSystem->CompileMacro("Xe1tTpcPeak.cpp","kgf","Xe1tTpcPeak");
+  //  gSystem->CompileMacro("Xe1tTpcEvent.cpp","kgf","Xe1tTpcEvent");
+
+  //  gSystem->CompileMacro("Xe1tTpcPeak.cpp","kO","Xe1tTpcPeak");
+  //  gSystem->CompileMacro("Xe1tTpcEvent.cpp","kO","Xe1tTpcEvent");
+
+  gSystem->Load("Xe1tTpcPeak.so");
+  gSystem->Load("Xe1tTpcEvent.so");
+
 }

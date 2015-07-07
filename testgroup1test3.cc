@@ -24,7 +24,7 @@ void WaitForDClick()
 }
 
 
-void testgroup1test2()
+void testgroup1test3()
 {
   using std::cout;
   using std::endl;
@@ -35,23 +35,19 @@ void testgroup1test2()
   ptree->SetScanField(0);
   //  ptree->Print();
 
-  // 5)
+  // 6)
 
   cout << "\n *****************************************************************************";
   cout << "\n YOU SHOULD RUN THIS TEST IN A FRESH ROOT SESSION ";
-  cout << "\n 5) NEXT TEST IS: ptree->Scan(\"EvtId()\"); //i.e. a request IN PRINCIPLE not accessing the Peaks' TCloneArray\n";
+  cout << "\n 6) NEXT TEST IS: ptree->Scan(\"pRefS1Peaks@->GetLast()+1\"); //do I need to load the TClonesArray branch?\n";
 
   WaitForDClick();
   
   cout << "________________________________________________________\n";
-  ptree->Scan("EvtId()");
+  ptree->Scan("pRefS1Peaks@->GetLast()+1");
   cout << "________________________________________________________\n\n";
 
-  cout << " This is in principle equivalent to access to mEvtNumber, which should not require to load "
-    "\n the branch of TClonesArray of Xe1tTpcPeak. HOWEVER TTree::Draw() does not know which branches "
-    "\n are required to the method, so it is loading practically all branches."
-    "\n The same occurs with the other methods NbPeaks(), NbS1(), etc.. of the class Xe1tTpcEvent()"
-    "\n The bottom line is that methods should not be in the \"main\" object...\n";
+  cout << " A TRefArray knows about its own size and do not need to load the referenced TClonesArray elements\n";
 
   WaitForDClick();
 

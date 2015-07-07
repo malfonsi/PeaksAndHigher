@@ -45,15 +45,21 @@ public:
 
   ~Xe1tTpcEvent() ;
 
-  const TRefArray* S1List() const { return pRefS1Peaks; } //is const suitable?
-  const TRefArray* S2List() const { return pRefS2Peaks; } //is const suitable?
-  const Long64_t& EvtNb() const { return mEvtNumber; } 
+  //  const TRefArray* S1List() const { return pRefS1Peaks; } //they do not work of course... maybe 
+  //  const TRefArray& S2List() const { return *pRefS2Peaks; } //with the new TTreeFormula of ROOT6.06 ?
+
+  Long64_t EvtId() const { return mEvtNumber; } 
+  Int_t NbPeaks() const { return pTpcPeaks->GetEntries(); }
+  Int_t NbS1() const { return pRefS1Peaks->GetLast() + 1; } //Yes, this is the total number of events of
+  Int_t NbS2() const { return pRefS2Peaks->GetLast() + 1; } //a TRefArray... complain with the ROOT team!
+  
 
   const Xe1tTpcPeak* S1(UInt_t index) const 
   { return static_cast<Xe1tTpcPeak*>( pRefS1Peaks->At(index) ); }
+  
+  const Xe1tTpcPeak* S2(UInt_t index) const 
+  { return static_cast<Xe1tTpcPeak*>( pRefS2Peaks->At(index) ); } 
 
-  const Xe1tTpcPeak& S2(UInt_t index) const 
-  { return *( static_cast<Xe1tTpcPeak*>( pRefS2Peaks->At(index) ) ); }
 
   void ClearEvent() ;
 

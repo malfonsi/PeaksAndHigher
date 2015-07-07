@@ -10,13 +10,14 @@
 #include "TRandom.h"
 
 
-#include "Xe1tTpcEvent.hpp"
 #include "Xe1tTpcPeak.hpp"
+#include "Xe1tTpcEvent.hpp"
 
 
 //remove when debugging is done (used to quickly debug constructor calls)
 #include <iostream>
 
+ClassImp(Xe1tTpcEvent);
 
 extern TRandom* gRandom;
 
@@ -68,12 +69,23 @@ void Xe1tTpcEvent::BuildExampleEvent(Double_t bias) {
   for (Int_t ipeak = 0; ipeak < npeaks ; ++ipeak) {
     auto ppeak = static_cast<Xe1tTpcPeak*>( pTpcPeaks->ConstructedAt(ipeak) );
 
-    ppeak->SetVars(bias+ipeak*10.0, bias+ipeak*7.0); //again just some values
+    //Let's make, just for this example, any first peak every three peaks a S1, any second a S2 and
+    //any third nothing interesting. The Tot/Bottom area assigned to each peak has no meaning, but
+    //it is chosen with a regular pattern in order to easily recognize assignments when looking into the data
+    if(ipeak%3 == 0) {
+      pRefS1Peaks->Add(ppeak);
+      Double_t peakarea = (100.+10.*ipeak)+bias/100. ; 
+      ppeak->SetVars(peakarea, peakarea*0.8);
+    } else if(ipeak%3 == 1) {
+      pRefS2Peaks->Add(ppeak);
+      Double_t peakarea = (10000.+1000.*ipeak)+bias/100. ; 
+      ppeak->SetVars(peakarea, peakarea*0.5);
+    } else {
+      Double_t peakarea = ipeak+bias/100. ; 
+      ppeak->SetVars(peakarea, peakarea*0.5);
+    };
 
-    //Let's make just for this example any first peak every three peaks a S1, any second a S2 and
-    //any third nothing interesting
-    if(ipeak%3 == 0) pRefS1Peaks->Add(ppeak);
-    if(ipeak%3 == 1) pRefS2Peaks->Add(ppeak);
+
   }
   
   //The next 4 lines are the comments within the ROOT Event class
@@ -83,3 +95,9 @@ void Xe1tTpcEvent::BuildExampleEvent(Double_t bias) {
   //   object count to what it was at the beginning of the event."
   TProcessID::SetObjectCount(objectnumber);
 }
+
+
+// #if defined(__ROOTCLING__)
+// #pragma link C++ class Xe1tTpcPeak+;
+// #pragma link C++ class Xe1tTpcEvent+;
+// #endif

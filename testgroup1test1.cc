@@ -14,12 +14,12 @@
 #include <iostream>
 
 
-TCanvas testgroup1test1canvas1 ;
+TCanvas testgroup1test1canvas("testgroup1test1canvas","Double click me!",200,200) ;
 
 void WaitForDClick()
 {
   cout << "\nDouble-click the canvas to continue\r" << flush;
-  testgroup1test1canvas1.Modified() ; testgroup1test1canvas1.Update() ; testgroup1test1canvas1.WaitPrimitive() ;
+  testgroup1test1canvas.Modified() ; testgroup1test1canvas.Update() ; testgroup1test1canvas.WaitPrimitive() ;
   cout << "                                                            \n";
 }
 
@@ -32,11 +32,12 @@ void testgroup1test1()
 
   auto prootfile = TFile::Open("testTPCevent.root");
   auto ptree = static_cast<TTree*>( prootfile->Get("treeTPC") );
+  ptree->SetScanField(0);
   ptree->Print();
 
   // 1)
 
-  cout << "\n *****************************************************************************";
+  cout << "\n *****************************************************************************\n\n";
   cout << "\n 1) NEXT TEST IS: ptree->Scan(\"mEvtNumber\"); //i.e. a request not accessing the Peaks' TCloneArray\n";
 
   WaitForDClick();
@@ -89,16 +90,21 @@ void testgroup1test1()
   WaitForDClick();
 
 
+  // 4)
 
+  cout << "\n *****************************************************************************";
+  cout << "\n 4) NEXT TEST IS: ptree->Scan(\"EvtId():NbPeaks():Tot():NbS1():pRefS1Peaks.Tot():S1(0).Tot():NbS2():pRefS2Peaks.Tot()\");\n"
+    " //This is the same using methods instead of direct access to variables.\n" ;
 
+  WaitForDClick();
 
+  cout << "______________________________________________________________________________________________________________________________\n";
+  ptree->Scan("EvtId():NbPeaks():Tot():NbS1():pRefS1Peaks.Tot():S1(0).Tot():NbS2():pRefS2Peaks.Tot()","","colsize=20");
+  cout << "______________________________________________________________________________________________________________________________\n\n";
 
-  /*
-  ptree->Scan("mIntVar:mFloatVar:pTpcPeaks@->GetEntries()"
-	      ":mBottomArea:mTotArea:fUniqueID"
-	      ":pRefS1Peaks->fUniqueID:pRefS1Peaks->mTotArea"
-	      ":pRefS2Peaks->fUniqueID:pRefS2Peaks->mTotArea");
-  ptree->Scan("mIntVar:mFloatVar:pTpcPeaks@->GetEntries():Bottom():Tot():fUniqueID:"
-	      "pRefS1Peaks->fUniqueID:pRefS1Peaks->Tot():pRefS2Peaks->fUniqueID:pRefS2Peaks->Tot()");
-  */
+  cout << " Now the methods needs to have the branches \"loaded\" with the right entry so how ROOT deals with that?\n "
+    " More investigation in the next test scripts. Each of them must be started in a fresh ROOT session, to \n"
+    " verify which branches are loaded from the debug messages in the constructors (for a more complete debug \n"
+    " I would need to put this debug message in a custom Streamer).\n";
+
 }

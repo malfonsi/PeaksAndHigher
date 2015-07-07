@@ -41,8 +41,8 @@ public:
   void SetVars(Float_t tot, Float_t bottom) { mTotArea = tot; mBottomArea = bottom; }
   void Clear(Option_t* = "") override {} //Let's test the C++11 override cross-check
 
-  const Float_t& Tot() const { return mTotArea; }
-  const Float_t& Bottom() const { return mBottomArea; }
+  Float_t Tot() const { return mTotArea; }
+  Float_t Bottom() const { return mBottomArea; }
 
   ClassDef(Xe1tTpcPeak, 1); //Required by the ROOT I/O to automatically generate Streamer()
 };
